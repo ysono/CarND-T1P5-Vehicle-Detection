@@ -15,6 +15,13 @@ The goals / steps of this project are the following:
 
 ---
 
+The main submissions are these two python notebooks:
+
+- [project-train.ipynb](https://ysono.github.io/CarND-T1P5-Vehicle-Detection/project-train.html)
+- [project-test.ipynb](https://ysono.github.io/CarND-T1P5-Vehicle-Detection/project-test.html)
+
+---
+
 ### Histogram of Oriented Gradients (HOG)
 
 #### 1. Explain how (and identify where in your code) you extracted HOG features from the training images.
@@ -89,7 +96,7 @@ This makes sense from the traditional training/validation/test dataset split. We
 
 1. training portion split from GTI and KITTI dataset (the `vehicles.zip` and `non-vehicles.zip`)
 1. validation portion split from the same GTI and KITTI dataset
-1. video screenshots in [./test_images/](test_images), and the videos themselves, [test_video.mp4](test_video.mp4) and [project_video.mp4](project_video.mp4)
+1. video screenshots in [./test_images/](test_images), and the videos themselves, [test_video.mp4](https://ysono.github.io/CarND-T1P5-Vehicle-Detection/test_video.mp4) and [project_video.mp4](https://ysono.github.io/CarND-T1P5-Vehicle-Detection/project_video.mp4)
 
 The roles of the above datasets are:
 
@@ -103,7 +110,7 @@ For this reason if I were to do this project again, I would use udacity's huge d
 
 As for of what I did to improve performance, in terms of accuracy of desired results on the videos, it required a lot of try and error of color space usages. Intuition about the importance of saturation and red color spaces didn't really help.
 
-And in terms of time performance, results in [project-train.html](project-train.html) do show that using more color channels adds time to feature extraction. Color transformation adds time, but we almost definitely need some color space other than RGB/BGR anyway. Resizing does not seem to cost too much time, so for color features, it is probably advantageous to use smaller resolution. My final choice of feature set ends up using the most number of color spaces among all experimented -- 2 for HOG and 3 for color. But the performance for video is adequate, as explained below.
+And in terms of time performance, results in [project-train.html](https://ysono.github.io/CarND-T1P5-Vehicle-Detection/project-train.html) do show that using more color channels adds time to feature extraction. Color transformation adds time, but we almost definitely need some color space other than RGB/BGR anyway. Resizing does not seem to cost too much time, so for color features, it is probably advantageous to use smaller resolution. My final choice of feature set ends up using the most number of color spaces among all experimented -- 2 for HOG and 3 for color. But the performance for video is adequate, as explained below.
 
 ---
 
@@ -113,9 +120,9 @@ And in terms of time performance, results in [project-train.html](project-train.
 
 My outputs are:
 
-- [annotated_test_video.mp4](output_images/annotated_test_video.mp4)
-- [annotated_project_video.mp4](output_images/annotated_project_video.mp4)
-- Annotated on top of advanced lane line detection: [annotated_project_video_with_lane_lines.mp4](output_images/annotated_project_video_with_lane_lines.mp4)
+- [annotated_test_video.mp4](https://ysono.github.io/CarND-T1P5-Vehicle-Detection/output_images/annotated_test_video.mp4)
+- [annotated_project_video.mp4](https://ysono.github.io/CarND-T1P5-Vehicle-Detection/output_images/annotated_project_video.mp4)
+- Annotated on top of advanced lane line detection: [annotated_project_video_with_lane_lines.mp4](https://ysono.github.io/CarND-T1P5-Vehicle-Detection/output_images/annotated_project_video_with_lane_lines.mp4)
 
 #### 2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
 
@@ -140,6 +147,8 @@ Issues encountered mainly had to do with my approach. I should have spent more t
 The black color is obviously an issue. In fact I don't know how my pipeline performs on other colors, because there are only 2 black cars and one white car in the two videos. To correct this, I'd need to add more features, which could be reasonable if training with the much larger udacity dataset, or fine-tune choice of color spaces further.
 
 The commonality of false positives is another issue. Many of them appeared to contain a lane line. To remedy this, hard negative mining should be done by manually cropping out false positive windows and augmenting the training dataset with them. And if non-car training samples are under-represented, it could be sufficient to augment them with any road-related, non-car images, such as a collection of traffic signs from the previous traffic sign recognition project.
+
+Even when a car is generally correctly identified, the bounding box is often too short, because I have only 3 horizontal strips in which I search for cars. More strips need to be added.
 
 My current thresholding is primarily aimed to reduce false positives. This also causes some false negatives, and in case where a car box disappears and reappears immediately, some smoothing technique should be able to fill in these holes. This smoothing would use historical positions to derive relative speed and estimate the box's position at the next frame. So that such smoothed-in, non-detected car boxes are not kept around forever, they could be eliminated once their height diminshes beyond some threshold.
 
